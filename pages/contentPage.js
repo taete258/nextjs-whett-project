@@ -145,7 +145,7 @@ export default function ContentPage(props) {
               }}
             />
           </Grid>
-          <Grid sm={6} md={12} xs={6}>
+          <Grid sm={6} md={12} xs={10}>
             {listLocation.length > 0 && (
               <Card
                 style={{
