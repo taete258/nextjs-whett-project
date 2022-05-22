@@ -59,6 +59,7 @@ const searchResult = (query) =>
       value: e.name + ", " + e.country,
       label: (
         <div
+          key={i}
           style={{
             display: "flex",
             justifyContent: "flex-start",
@@ -84,7 +85,6 @@ export default function ContentPage(props) {
   const [searchKey, setSearchKey] = useState("");
   const [selectLocation, setSelectLocation] = useState("");
   const handleSearch = async (value) => {
-    // setOptions(value ? searchResult(value) : []);
     setSearchKey(value);
     setListLocation(value && searchResult(await search(value)));
   };
@@ -199,6 +199,7 @@ export default function ContentPage(props) {
                 {listLocation.map((e, i) => {
                   return (
                     <div
+                      key={i}
                       style={{ cursor: "pointer", padding: 5 }}
                       onClick={async () => {
                         console.log(e);
