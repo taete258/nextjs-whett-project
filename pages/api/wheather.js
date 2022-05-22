@@ -30,7 +30,6 @@ const Weather = () => {
   };
 
   const search = async (params) => {
-    console.log(params);
     const options = {
       url: "https://api.weatherapi.com/v1/search.json?key=b8f2fcfa73144c96a35123148222105&q=Lopburi",
     };

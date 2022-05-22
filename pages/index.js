@@ -1,8 +1,6 @@
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import Button from "@nextui-org/react/button";
-import { Container, Row, Card, theme, Text } from "@nextui-org/react";
+import { Row, Text } from "@nextui-org/react";
 import { useTheme as useNextTheme } from "next-themes";
 import { Switch, useTheme } from "@nextui-org/react";
 import ContentPage from "./contentPage";
@@ -25,9 +23,7 @@ export default function Home() {
       <div className={styles.container}>
         <header
           style={{
-            backgroundColor: isDark
-              ? theme.colors.purple400.value
-              : theme.colors.blue600.value,
+            backgroundColor: theme.colors.blue600.value,
           }}
         >
           <div className={styles.header}>
@@ -40,6 +36,7 @@ export default function Home() {
                 className={styles.hearder_title}
                 style={{
                   backgroundColor: "#fff",
+                  color: theme.colors.blue600.value,
                 }}
               >
                 {" "}
@@ -49,24 +46,67 @@ export default function Home() {
                 style={{
                   alignSelf: "center",
                 }}
-                color={"secondary"}
+                bordered
                 checked={isDark}
-                iconOn={<i className="bx bx-moon" />}
-                iconOff={<i className="bx bx-sun" />}
+                iconOn={
+                  <i
+                    className="bx bx-moon"
+                    style={{
+                      color: theme.colors.white.value,
+                    }}
+                  />
+                }
+                iconOff={
+                  <i
+                    className="bx bx-sun"
+                    style={{
+                      color: theme.colors.blue700.value,
+                    }}
+                  />
+                }
                 onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
               />
             </Row>
           </div>
         </header>
-        <ContentPage props={"yyyssss"} test={"aaaa"} />
+        <main
+          className={styles.main}
+          style={{
+            backgroundColor: isDark
+              ? theme.colors.black.value
+              : theme.colors.white.value,
+          }}
+        >
+          <ContentPage props={"yyyssss"} test={"aaaa"} />
+        </main>
 
-        <footer className={styles.footer}>
-          <p>Dev by Ratchanon Pheungta</p>
+        <footer
+          className={styles.footer}
+          style={{
+            backgroundColor: isDark
+              ? theme.colors.black.value
+              : theme.colors.white.value,
+          }}
+        >
+          <span
+            style={{
+              color: isDark
+                ? theme.colors.white.value
+                : theme.colors.black.value,
+            }}
+          >
+            Dev by Ratchanon Pheungta
+          </span>
           <a
             href="https://www.linkedin.com/in/ratchanon-pheungta-6846a9229/"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.social_icon}
+            style={{
+              color: isDark
+                ? theme.colors.white.value
+                : theme.colors.blue700.value,
+            }}
           >
             <i className="bx bxl-linkedin-square"></i>
           </a>

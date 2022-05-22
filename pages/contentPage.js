@@ -1,19 +1,8 @@
-import {
-  Card,
-  Container,
-  Grid,
-  Text,
-  useTheme,
-  Input,
-  Spacer,
-  Button,
-} from "@nextui-org/react";
-import { useTheme as useNextTheme } from "next-themes";
+import { Card, Grid, Text, useTheme, Input, Col, Row } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 import axios from "axios";
-
-// import Weather from "./api/wheather";
+import iconJson from "../assets/iconData.json";
 
 const MockItem = (data) => {
   const { isDark, theme } = useTheme();
@@ -33,18 +22,7 @@ const MockItem = (data) => {
 
 const getWeather = async (params) => {
   const options = {
-    method: "GET",
-    url: "https://weatherbit-v1-mashape.p.rapidapi.com/current",
-    headers: {
-      "X-RapidAPI-Host": "weatherbit-v1-mashape.p.rapidapi.com",
-      "X-RapidAPI-Key": "0feeca8649mshfafbef702e63449p147c60jsn28830813af0f",
-    },
-    params: {
-      lon: "100.877808",
-      lat: "14.646118000000001",
-      units: "metric",
-      lang: "en",
-    },
+    url: `https://api.weatherapi.com/v1/current.json?key=b8f2fcfa73144c96a35123148222105&q=${params}&aqi=yes`,
   };
 
   const response = await axios
@@ -55,12 +33,10 @@ const getWeather = async (params) => {
     .catch(function (error) {
       console.error(error);
     });
-
   return response;
 };
 
 const search = async (params) => {
-  console.log(params);
   const options = {
     url: `https://api.weatherapi.com/v1/search.json?key=b8f2fcfa73144c96a35123148222105&q=${params}`,
   };
@@ -77,6 +53,24 @@ const search = async (params) => {
   return response;
 };
 
+const searchResult = (query) =>
+  query.map((e, i) => {
+    return {
+      value: e.name + ", " + e.country,
+      label: (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            color: "#1890ff",
+          }}
+        >
+          {e.name}, {e.country}
+        </div>
+      ),
+    };
+  });
+
 export default function ContentPage(props) {
   const { isDark, theme } = useTheme();
 
@@ -89,34 +83,65 @@ export default function ContentPage(props) {
   const [listLocation, setListLocation] = useState([]);
   const [searchKey, setSearchKey] = useState("");
   const [selectLocation, setSelectLocation] = useState("");
+  const handleSearch = async (value) => {
+    // setOptions(value ? searchResult(value) : []);
+    setSearchKey(value);
+    setListLocation(value && searchResult(await search(value)));
+  };
 
-  const getWeatherData = async () => {
-    let data = await Weather.getWeather(location);
+  const onLoad = async () => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      setLocaton({
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+      });
+    });
+    let data = await getWeather(location.lat + "," + location.lon);
     setDataWheather(data);
-    console.log(data);
+    setSelectLocation(data.location.name + ", " + data.location.country);
+  };
+  const geticon = () => {
+    let url =
+      "/icon/" +
+      iconJson.find((x) => x.code == dataWheather.current.condition.code).icon +
+      ".png";
+    return url;
   };
 
   useEffect(() => {
-    // navigator.geolocation.getCurrentPosition(function (position) {
-    //   setLocaton({
-    //     lat: position.coords.latitude,
-    //     lon: position.coords.longitude,
-    //   });
-    // });
-    // console.log("test");
-    // getWeatherData();
-    // console.log(search("test"));
+    onLoad();
   }, []);
 
   return (
     <>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a>Whett</a>
+      <div>
+        <h1
+          className={styles.title}
+          style={{
+            color: isDark ? theme.colors.white.value : theme.colors.black.value,
+          }}
+        >
+          <Row>
+            Welcome to
+            <span
+              size={60}
+              style={{
+                backgroundColor: "#fff",
+                color: theme.colors.blue600.value,
+                borderRadius: 10,
+                fontWeight: "700",
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginLeft: 15,
+              }}
+            >
+              Whett
+            </span>
+          </Row>
         </h1>
 
         <Grid.Container gap={2} justify="center" style={{ maxWidth: 800 }}>
-          <Grid sm={6} md={12} xs={8}>
+          <Grid sm={10} md={12} xs={10}>
             <Input
               clearable
               rounded
@@ -139,101 +164,101 @@ export default function ContentPage(props) {
               }}
               onKeyPress={async (event) => {
                 if (event.key === "Enter") {
-                  setListLocation(await search(searchKey));
+                  setListLocation(
+                    event.target.value &&
+                      searchResult(await search(event.target.value))
+                  );
                   console.log(listLocation);
                 }
               }}
             />
           </Grid>
-          <Grid sm={6} md={12} xs={10}>
-            {listLocation.length > 0 && (
-              <Card
+          {listLocation.length > 0 && (
+            <Grid
+              sm={6}
+              md={12}
+              xs={10}
+              css={{
+                backgroundColor: isDark
+                  ? theme.colors.black.value
+                  : theme.colors.white.value,
+                borderRadius: 25,
+                boxShadow: "$md",
+                border: "$space$1 solid $gray400",
+                position: "absolute",
+                top: 430,
+                zIndex: 1,
+                width: 500,
+              }}
+            >
+              <div
                 style={{
                   flexDirection: "row",
                 }}
               >
                 {listLocation.map((e, i) => {
                   return (
-                    <>
-                      <Button
-                        light
-                        color="primary"
-                        onClick={() => {
-                          setSelectLocation(e);
-                          setListLocation([]);
-                        }}
-                      >
-                        <i className="bx bxs-map" /> {e.name}, {e.country}
-                      </Button>
-                      <Spacer y={0.3} />
-                    </>
+                    <div
+                      style={{ cursor: "pointer", padding: 5 }}
+                      onClick={async () => {
+                        console.log(e);
+                        let data = await getWeather(e.value);
+                        setDataWheather(data);
+                        setSelectLocation(e.value);
+                        setListLocation([]);
+                      }}
+                    >
+                      {e.label}
+                    </div>
                   );
                 })}
-              </Card>
-            )}
-          </Grid>
+              </div>
+            </Grid>
+          )}
         </Grid.Container>
 
         {selectLocation && (
           <Grid.Container gap={2} justify="center" style={{ maxWidth: 800 }}>
-            <Grid sm={6} md={12} xs={8}>
-              {/* {dataWheather} */}
+            <Grid sm={11} md={12} xs={11}>
               <Card
                 style={{
-                  height: 250,
+                  height: "auto",
                   backgroundColor: isDark ? "#fff" : theme.colors.blue600.value,
                 }}
               >
-                <Text
-                  h6
-                  size={40}
-                  color={isDark ? "#000" : "#fff"}
-                  css={{ mt: 0 }}
-                >
-                  {selectLocation.name}
-                </Text>
-                <Text
-                  h6
-                  size={40}
-                  color={isDark ? "#000" : "#fff"}
-                  css={{ mt: 0 }}
-                >
-                  {selectLocation.country}
-                </Text>
-                <Text
-                  size={60}
-                  color={isDark ? "#000" : "#fff"}
-                  css={{ mt: 0 }}
-                >
-                  <i className="bx bx-sun"></i>
-                </Text>
+                <Col justify="flex-start" align="center">
+                  <Text
+                    size={26}
+                    color={isDark ? "#000" : "#fff"}
+                    css={{ mt: 0 }}
+                  >
+                    {dataWheather.location.region},{" "}
+                    {dataWheather.location.country}
+                  </Text>
+                  <img width={80} height={80} src={geticon()} />
+                  <Text
+                    h6
+                    size={35}
+                    color={isDark ? "#000" : "#fff"}
+                    css={{ mt: 0 }}
+                  >
+                    {dataWheather.current.temp_c} °C
+                    {/* {" / "}
+                    {dataWheather.current.temp_f} °F */}
+                  </Text>
+                  <Text
+                    size={30}
+                    color={isDark ? "#000" : "#fff"}
+                    css={{ mt: 0 }}
+                  >
+                    {dataWheather.current.condition.text}
+                  </Text>
+                </Col>
               </Card>
             </Grid>
           </Grid.Container>
         )}
-
-        {dataWheather.length > 0 && (
-          <>
-            <Grid.Container gap={2} justify="center" style={{ maxWidth: 800 }}>
-              <Grid xs={8} sm={6}>
-                <MockItem text={"111"} />
-              </Grid>
-              <Grid xs={8} sm={6}>
-                <MockItem text={"222"} />
-              </Grid>
-            </Grid.Container>
-
-            <Grid.Container gap={2} justify="center" style={{ maxWidth: 800 }}>
-              <Grid xs={8} sm={6}>
-                <MockItem text={"333"} />
-              </Grid>
-              <Grid xs={8} sm={6}>
-                <MockItem text={"444"} />
-              </Grid>
-            </Grid.Container>
-          </>
-        )}
-      </main>
+      </div>
     </>
   );
 }
