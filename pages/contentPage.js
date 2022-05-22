@@ -115,30 +115,34 @@ export default function ContentPage(props) {
   return (
     <>
       <div>
-        <h1
-          className={styles.title}
-          style={{
-            color: isDark ? theme.colors.white.value : theme.colors.black.value,
-          }}
-        >
-          <Row>
-            Welcome to
-            <span
-              size={60}
+        <Grid.Container gap={2} justify="center" style={{ maxWidth: 800 }}>
+          <Grid sm={12} md={12} xs={12}>
+            <h1
+              className={styles.title}
               style={{
-                backgroundColor: "#fff",
-                color: theme.colors.blue600.value,
-                borderRadius: 10,
-                fontWeight: "700",
-                paddingLeft: 10,
-                paddingRight: 10,
-                marginLeft: 15,
+                color: isDark
+                  ? theme.colors.white.value
+                  : theme.colors.black.value,
               }}
             >
-              Whett
-            </span>
-          </Row>
-        </h1>
+              <span>Welcome to</span>
+              <span
+                size={60}
+                style={{
+                  backgroundColor: "#fff",
+                  color: theme.colors.blue600.value,
+                  borderRadius: 10,
+                  fontWeight: "700",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  marginLeft: 15,
+                }}
+              >
+                Whett
+              </span>
+            </h1>
+          </Grid>
+        </Grid.Container>
 
         <Grid.Container gap={2} justify="center" style={{ maxWidth: 800 }}>
           <Grid sm={10} md={12} xs={10}>
