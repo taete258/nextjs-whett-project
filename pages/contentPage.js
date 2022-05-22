@@ -90,15 +90,17 @@ export default function ContentPage(props) {
   };
 
   const onLoad = async () => {
-    navigator.geolocation.getCurrentPosition(function (position) {
+    await navigator.geolocation.getCurrentPosition(async (position) => {
       setLocaton({
         lat: position.coords.latitude,
         lon: position.coords.longitude,
       });
+      let data = await getWeather(
+        position.coords.latitude + "," + position.coords.longitude
+      );
+      setDataWheather(data);
+      setSelectLocation(data.location.name + ", " + data.location.country);
     });
-    let data = await getWeather(location.lat + "," + location.lon);
-    setDataWheather(data);
-    setSelectLocation(data.location.name + ", " + data.location.country);
   };
   const geticon = () => {
     let url =
