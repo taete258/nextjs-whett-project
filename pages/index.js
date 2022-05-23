@@ -13,7 +13,7 @@ export default function Home() {
     <>
       <Head>
         <title>Whett</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <link rel="icon" href="/favicon.ico" />
         <link
           href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
