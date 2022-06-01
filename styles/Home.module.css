@@ -5,7 +5,7 @@
 }
 
 .main {
-  min-height: 80vh;
+  height: 84vh;
   padding: 0rem 0;
   flex: 1;
   display: flex;
@@ -20,7 +20,7 @@
   padding:10px;
   align-items: center;
   border-radius: 10px;
-  min-height: 10vh;
+  height: 7vh;
 }
 
 .hearder_title{
@@ -63,7 +63,7 @@
   border-top: 1px solid #eaeaea;
   justify-content: center;
   align-items: center;
-  min-height: 10vh;
+  height: 7vh;
 }
 
 .footer span {

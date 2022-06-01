@@ -1,9 +1,9 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
-import { Row, Text } from "@nextui-org/react";
-import { useTheme as useNextTheme } from "next-themes";
-import { Switch, useTheme } from "@nextui-org/react";
-import ContentPage from "./contentPage";
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
+import { Row, Text } from '@nextui-org/react';
+import { useTheme as useNextTheme } from 'next-themes';
+import { Switch, useTheme } from '@nextui-org/react';
+import ContentPage from './contentPage';
 
 export default function Home() {
   const { setTheme } = useNextTheme();
@@ -13,7 +13,10 @@ export default function Home() {
     <>
       <Head>
         <title>Whett</title>
-        <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta
+          name="viewport"
+          content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
         <link rel="icon" href="/favicon.ico" />
         <link
           href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
@@ -29,22 +32,22 @@ export default function Home() {
           <div className={styles.header}>
             <Row
               style={{
-                justifyContent: "space-between",
+                justifyContent: 'space-between',
               }}
             >
               <Text
                 className={styles.hearder_title}
                 style={{
-                  backgroundColor: "#fff",
+                  backgroundColor: '#fff',
                   color: theme.colors.blue600.value,
                 }}
               >
-                {" "}
+                {' '}
                 Whett
               </Text>
               <Switch
                 style={{
-                  alignSelf: "center",
+                  alignSelf: 'center',
                 }}
                 bordered
                 checked={isDark}
@@ -64,7 +67,9 @@ export default function Home() {
                     }}
                   />
                 }
-                onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
+                onChange={(e) =>
+                  setTheme(e.target.checked ? 'dark' : 'light')
+                }
               />
             </Row>
           </div>
@@ -75,9 +80,10 @@ export default function Home() {
             backgroundColor: isDark
               ? theme.colors.black.value
               : theme.colors.white.value,
+            overflow: 'auto',
           }}
         >
-          <ContentPage props={"yyyssss"} test={"aaaa"} />
+          <ContentPage props={'yyyssss'} test={'aaaa'} />
         </main>
 
         <footer

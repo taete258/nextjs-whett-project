@@ -1,24 +1,10 @@
-import { Card, Grid, Text, useTheme, Input, Col, Row } from "@nextui-org/react";
-import { useEffect, useState } from "react";
-import styles from "../styles/Home.module.css";
-import axios from "axios";
-import iconJson from "../assets/iconData.json";
-
-const MockItem = (data) => {
-  const { isDark, theme } = useTheme();
-  return (
-    <Card
-      style={{
-        height: data.height || 150,
-        backgroundColor: isDark ? "#fff" : theme.colors.blue600.value,
-      }}
-    >
-      <Text h6 size={15} color={isDark ? "#000" : "#fff"} css={{ mt: 0 }}>
-        {data.text}
-      </Text>
-    </Card>
-  );
-};
+import { Grid, Text, useTheme, Col, Image } from '@nextui-org/react';
+import { useEffect, useState } from 'react';
+import styles from '../styles/Home.module.css';
+import axios from 'axios';
+import iconJson from '../assets/iconData.json';
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
+import { useTheme as useNextTheme } from 'next-themes';
 
 const getWeather = async (params) => {
   const options = {
@@ -33,6 +19,8 @@ const getWeather = async (params) => {
     .catch(function (error) {
       console.error(error);
     });
+  console.log(response);
+
   return response;
 };
 
@@ -49,65 +37,74 @@ const search = async (params) => {
     .catch(function (error) {
       console.error(error);
     });
-  console.log(response);
   return response;
 };
 
 const searchResult = (query) =>
   query.map((e, i) => {
     return {
-      value: e.name + ", " + e.country,
-      label: (
-        <div
-          key={i}
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            color: "#1890ff",
-          }}
-        >
-          {e.name}, {e.country}
-        </div>
-      ),
+      id: i,
+      name: e.name + ', ' + e.country,
     };
   });
 
-export default function ContentPage(props) {
+const ContentPage = (props) => {
   const { isDark, theme } = useTheme();
-
-  const [location, setLocaton] = useState({
-    lat: 0,
-    lon: 0,
-  });
-
+  const { setTheme } = useNextTheme();
   const [dataWheather, setDataWheather] = useState([]);
   const [listLocation, setListLocation] = useState([]);
-  const [searchKey, setSearchKey] = useState("");
-  const [selectLocation, setSelectLocation] = useState("");
-  const handleSearch = async (value) => {
-    setSearchKey(value);
-    setListLocation(value && searchResult(await search(value)));
-  };
+
+  const [selectLocation, setSelectLocation] = useState('');
 
   const onLoad = async () => {
-    await navigator.geolocation.getCurrentPosition(async (position) => {
-      setLocaton({
-        lat: position.coords.latitude,
-        lon: position.coords.longitude,
-      });
-      let data = await getWeather(
-        position.coords.latitude + "," + position.coords.longitude
-      );
-      setDataWheather(data);
-      setSelectLocation(data.location.name + ", " + data.location.country);
-    });
+    const hours = new Date().getHours();
+    const isDayTime = hours > 6 && hours < 20;
+    setTheme(isDayTime ? 'light' : 'dark');
+
+    await navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        let data = await getWeather(
+          position.coords.latitude + ',' + position.coords.longitude
+        );
+        setDataWheather(data);
+        setSelectLocation(
+          data.location.name + ', ' + data.location.country
+        );
+      }
+    );
   };
   const geticon = () => {
     let url =
-      "/icon/" +
-      iconJson.find((x) => x.code == dataWheather.current.condition.code).icon +
-      ".png";
+      '/icon/' +
+      iconJson.find(
+        (x) => x.code == dataWheather.current.condition.code
+      ).icon +
+      '.png';
     return url;
+  };
+
+  const handleOnSearch = async (string) => {
+    setListLocation(string && searchResult(await search(string)));
+  };
+
+  const handleOnHover = (result) => {
+    console.log(result);
+  };
+
+  const handleOnSelect = async (item) => {
+    let data = await getWeather(item.name);
+    setDataWheather(data);
+    setSelectLocation(item.name);
+  };
+
+  const formatResult = (item) => {
+    return (
+      <div>
+        <span style={{ display: 'block', textAlign: 'left' }}>
+          {item.name}
+        </span>
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -116,8 +113,12 @@ export default function ContentPage(props) {
 
   return (
     <>
-      <div>
-        <Grid.Container gap={2} justify="center" style={{ maxWidth: 800 }}>
+      <div style={{ minHeight: 300 }}>
+        <Grid.Container
+          gap={1}
+          justify="center"
+          style={{ maxWidth: 800 }}
+        >
           <Grid sm={12} md={12} xs={12}>
             <h1
               className={styles.title}
@@ -131,10 +132,10 @@ export default function ContentPage(props) {
               <span
                 size={60}
                 style={{
-                  backgroundColor: "#fff",
+                  backgroundColor: '#fff',
                   color: theme.colors.blue600.value,
                   borderRadius: 10,
-                  fontWeight: "700",
+                  fontWeight: '700',
                   paddingLeft: 10,
                   paddingRight: 10,
                   marginLeft: 15,
@@ -146,126 +147,211 @@ export default function ContentPage(props) {
           </Grid>
         </Grid.Container>
 
-        <Grid.Container gap={2} justify="center" style={{ maxWidth: 800 }}>
+        <Grid.Container
+          gap={1}
+          justify="center"
+          style={{ maxWidth: 800 }}
+        >
           <Grid sm={10} md={12} xs={10}>
-            <Input
-              clearable
-              rounded
-              shadow
-              bordered
-              size="lg"
-              status={"primary"}
-              label="Location"
-              placeholder="Location Name"
-              width="100%"
-              contentLeftStyling={true}
-              contentLeft={
-                <div style={{ fontSize: 22 }}>
-                  <i className="bx bx-search" />
-                </div>
-              }
-              value={selectLocation.name}
-              onChange={(event) => {
-                setSearchKey(event.target.value);
-              }}
-              onKeyPress={async (event) => {
-                if (event.key === "Enter") {
-                  setListLocation(
-                    event.target.value &&
-                      searchResult(await search(event.target.value))
-                  );
-                  console.log(listLocation);
-                }
-              }}
-            />
-          </Grid>
-          {listLocation.length > 0 && (
-            <Grid
-              sm={6}
-              md={12}
-              xs={10}
-              css={{
-                backgroundColor: isDark
-                  ? theme.colors.black.value
-                  : theme.colors.white.value,
-                borderRadius: 25,
-                boxShadow: "$md",
-                border: "$space$1 solid $gray400",
-                position: "absolute",
-                top: 430,
-                zIndex: 1,
-                width: 500,
-              }}
-            >
-              <div
-                style={{
-                  flexDirection: "row",
-                }}
-              >
-                {listLocation.map((e, i) => {
-                  return (
-                    <div
-                      key={i}
-                      style={{ cursor: "pointer", padding: 5 }}
-                      onClick={async () => {
-                        console.log(e);
-                        let data = await getWeather(e.value);
-                        setDataWheather(data);
-                        setSelectLocation(e.value);
-                        setListLocation([]);
-                      }}
+            <div style={{ width: '100%' }}>
+              <ReactSearchAutocomplete
+                style={{ width: 800 }}
+                items={listLocation}
+                onSearch={handleOnSearch}
+                onHover={handleOnHover}
+                onSelect={handleOnSelect}
+                autoFocus
+                formatResult={formatResult}
+              />
+
+              <div style={{ marginTop: 20, zIndex: 1 }}>
+                {selectLocation && (
+                  <Col
+                    justify="flex-start"
+                    align="center"
+                    style={{
+                      backgroundColor: isDark
+                        ? theme.colors.white.value
+                        : theme.colors.blue600.value,
+                      borderRadius: 20,
+                      padding: 10,
+                    }}
+                  >
+                    <Text
+                      size={26}
+                      color={isDark ? '#000' : '#fff'}
+                      css={{ mt: 0 }}
                     >
-                      {e.label}
-                    </div>
-                  );
-                })}
+                      {dataWheather.location.region},{' '}
+                      {dataWheather.location.country}
+                    </Text>
+                    <Image
+                      width={80}
+                      height={80}
+                      src={geticon()}
+                      alt={`image-${dataWheather.current.condition.text.toLowerCase()}`}
+                    />
+                    <Text
+                      size={30}
+                      color={isDark ? '#000' : '#fff'}
+                      css={{ mt: 0 }}
+                    >
+                      {dataWheather.current.condition.text}
+                    </Text>
+                    <Text
+                      h6
+                      size={35}
+                      color={isDark ? '#000' : '#fff'}
+                      css={{ mt: 0 }}
+                    >
+                      {dataWheather.current.temp_c} °C
+                      {' / '}
+                      {dataWheather.current.temp_f} °F
+                    </Text>
+                  </Col>
+                )}
               </div>
-            </Grid>
-          )}
+            </div>
+          </Grid>
         </Grid.Container>
 
-        {selectLocation && (
-          <Grid.Container gap={2} justify="center" style={{ maxWidth: 800 }}>
-            <Grid sm={11} md={12} xs={11}>
-              <Card
-                style={{
-                  height: "auto",
-                  backgroundColor: isDark ? "#fff" : theme.colors.blue600.value,
-                }}
-              >
-                <Col justify="flex-start" align="center">
-                  <Text
-                    size={26}
-                    color={isDark ? "#000" : "#fff"}
-                    css={{ mt: 0 }}
-                  >
-                    {dataWheather.location.region},{" "}
-                    {dataWheather.location.country}
-                  </Text>
-                  <img width={80} height={80} src={geticon()} />
-                  <Text
-                    h6
-                    size={35}
-                    color={isDark ? "#000" : "#fff"}
-                    css={{ mt: 0 }}
-                  >
-                    {dataWheather.current.temp_c} °C
-                    {/* {" / "}
-                    {dataWheather.current.temp_f} °F */}
-                  </Text>
-                  <Text
-                    size={30}
-                    color={isDark ? "#000" : "#fff"}
-                    css={{ mt: 0 }}
-                  >
-                    {dataWheather.current.condition.text}
-                  </Text>
-                </Col>
-              </Card>
-            </Grid>
-          </Grid.Container>
-        )}
+        <Grid.Container
+          gap={1}
+          justify="center"
+          style={{ maxWidth: 800 }}
+        >
+          <Grid
+            sm={10}
+            md={12}
+            xs={10}
+            style={{ justifyContent: 'space-between' }}
+          >
+            <Col
+              justify="center"
+              align="center"
+              style={{
+                backgroundColor: isDark
+                  ? theme.colors.white.value
+                  : theme.colors.blue600.value,
+                borderRadius: 20,
+                padding: 10,
+
+                minHeight: 100,
+                width: '48%',
+              }}
+            >
+              <Text>1</Text>
+            </Col>
+            <Col
+              justify="center"
+              align="center"
+              style={{
+                backgroundColor: isDark
+                  ? theme.colors.white.value
+                  : theme.colors.blue600.value,
+                borderRadius: 20,
+                padding: 10,
+                minHeight: 100,
+                width: '48%',
+              }}
+            >
+              <Text>1</Text>
+            </Col>
+          </Grid>
+        </Grid.Container>
+
+        <Grid.Container
+          gap={1}
+          justify="center"
+          style={{ maxWidth: 800 }}
+        >
+          <Grid
+            sm={10}
+            md={12}
+            xs={10}
+            style={{ justifyContent: 'space-between' }}
+          >
+            <Col
+              justify="center"
+              align="center"
+              style={{
+                backgroundColor: isDark
+                  ? theme.colors.white.value
+                  : theme.colors.blue600.value,
+                borderRadius: 20,
+                padding: 10,
+
+                minHeight: 100,
+                width: '48%',
+              }}
+            >
+              <Text>1</Text>
+            </Col>
+            <Col
+              justify="center"
+              align="center"
+              style={{
+                backgroundColor: isDark
+                  ? theme.colors.white.value
+                  : theme.colors.blue600.value,
+                borderRadius: 20,
+                padding: 10,
+                minHeight: 100,
+                width: '48%',
+              }}
+            >
+              <Text>1</Text>
+            </Col>
+          </Grid>
+        </Grid.Container>
+
+        <Grid.Container
+          gap={1}
+          justify="center"
+          style={{ maxWidth: 800 }}
+        >
+          <Grid
+            sm={10}
+            md={12}
+            xs={10}
+            style={{ justifyContent: 'space-between' }}
+          >
+            <Col
+              justify="center"
+              align="center"
+              style={{
+                backgroundColor: isDark
+                  ? theme.colors.white.value
+                  : theme.colors.blue600.value,
+                borderRadius: 20,
+                padding: 10,
+
+                minHeight: 100,
+                width: '48%',
+              }}
+            >
+              <Text>1</Text>
+            </Col>
+            <Col
+              justify="center"
+              align="center"
+              style={{
+                backgroundColor: isDark
+                  ? theme.colors.white.value
+                  : theme.colors.blue600.value,
+                borderRadius: 20,
+                padding: 10,
+                minHeight: 100,
+                width: '48%',
+              }}
+            >
+              <Text>1</Text>
+            </Col>
+          </Grid>
+        </Grid.Container>
       </div>
     </>
   );
-}
+};
+
+export default ContentPage;
