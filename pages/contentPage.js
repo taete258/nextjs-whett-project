@@ -155,7 +155,7 @@ const ContentPage = (props) => {
           <Grid sm={10} md={12} xs={10}>
             <div style={{ width: '100%' }}>
               <ReactSearchAutocomplete
-                style={{ width: 800 }}
+                styling={{ width: 800, zIndex: 1 }}
                 items={listLocation}
                 onSearch={handleOnSearch}
                 onHover={handleOnHover}
