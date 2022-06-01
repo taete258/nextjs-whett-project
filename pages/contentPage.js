@@ -1,4 +1,11 @@
-import { Grid, Text, useTheme, Col, Image } from '@nextui-org/react';
+import {
+  Grid,
+  Text,
+  useTheme,
+  Col,
+  Image,
+  Row,
+} from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 import axios from 'axios';
@@ -120,102 +127,212 @@ const ContentPage = (props) => {
           style={{ maxWidth: 800 }}
         >
           <Grid sm={12} md={12} xs={12}>
-            <h1
-              className={styles.title}
-              style={{
-                color: isDark
-                  ? theme.colors.white.value
-                  : theme.colors.black.value,
-              }}
-            >
-              <span>Welcome to</span>
-              <span
-                size={60}
+            <Col>
+              <h1
+                className={styles.title}
                 style={{
-                  backgroundColor: '#fff',
-                  color: theme.colors.blue600.value,
-                  borderRadius: 10,
-                  fontWeight: '700',
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  marginLeft: 15,
+                  color: isDark
+                    ? theme.colors.white.value
+                    : theme.colors.black.value,
                 }}
               >
-                Whett
-              </span>
-            </h1>
+                <span>Welcome to</span>
+                <span
+                  size={60}
+                  style={{
+                    backgroundColor: '#fff',
+                    color: theme.colors.blue600.value,
+                    borderRadius: 10,
+                    fontWeight: '700',
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    marginLeft: 15,
+                  }}
+                >
+                  Whett
+                </span>
+              </h1>
+              <div style={{ width: '100%', marginTop: 10 }}>
+                <ReactSearchAutocomplete
+                  styling={{ width: 800, zIndex: 1 }}
+                  items={listLocation}
+                  onSearch={handleOnSearch}
+                  onHover={handleOnHover}
+                  onSelect={handleOnSelect}
+                  autoFocus
+                  formatResult={formatResult}
+                />
+              </div>
+            </Col>
           </Grid>
         </Grid.Container>
 
         <Grid.Container
           gap={1}
           justify="center"
-          style={{ maxWidth: 800 }}
+          style={{ width: 'auto' }}
         >
-          <Grid sm={10} md={12} xs={10}>
-            <div style={{ width: '100%' }}>
-              <ReactSearchAutocomplete
-                styling={{ width: 800, zIndex: 1 }}
-                items={listLocation}
-                onSearch={handleOnSearch}
-                onHover={handleOnHover}
-                onSelect={handleOnSelect}
-                autoFocus
-                formatResult={formatResult}
-              />
-
-              <div style={{ marginTop: 20, zIndex: 1 }}>
-                {selectLocation && (
-                  <Col
-                    justify="flex-start"
-                    align="center"
-                    style={{
-                      backgroundColor: isDark
-                        ? theme.colors.white.value
-                        : theme.colors.blue600.value,
-                      borderRadius: 20,
-                      padding: 10,
-                    }}
+          <Grid sm={10} md={12} xs={10} lg={6}>
+            <div
+              style={{
+                zIndex: 1,
+                width: '100%',
+              }}
+            >
+              {selectLocation && (
+                <Col
+                  justify="flex-end"
+                  align="center"
+                  style={{
+                    backgroundColor: isDark
+                      ? theme.colors.white.value
+                      : theme.colors.blue600.value,
+                    borderRadius: 20,
+                    padding: 10,
+                  }}
+                >
+                  <Text
+                    size={26}
+                    color={isDark ? '#000' : '#fff'}
+                    css={{ mt: 0 }}
                   >
-                    <Text
-                      size={26}
-                      color={isDark ? '#000' : '#fff'}
-                      css={{ mt: 0 }}
-                    >
-                      {dataWheather.location.region},{' '}
-                      {dataWheather.location.country}
-                    </Text>
-                    <Image
-                      width={80}
-                      height={80}
-                      src={geticon()}
-                      alt={`image-${dataWheather.current.condition.text.toLowerCase()}`}
-                    />
-                    <Text
-                      size={30}
-                      color={isDark ? '#000' : '#fff'}
-                      css={{ mt: 0 }}
-                    >
-                      {dataWheather.current.condition.text}
-                    </Text>
-                    <Text
-                      h6
-                      size={35}
-                      color={isDark ? '#000' : '#fff'}
-                      css={{ mt: 0 }}
-                    >
-                      {dataWheather.current.temp_c} °C
-                      {' / '}
-                      {dataWheather.current.temp_f} °F
-                    </Text>
-                  </Col>
-                )}
-              </div>
+                    {dataWheather.location.region},{' '}
+                    {dataWheather.location.country}
+                  </Text>
+                  <Image
+                    width={80}
+                    height={80}
+                    src={geticon()}
+                    alt={`image-${dataWheather.current.condition.text.toLowerCase()}`}
+                  />
+                  <Text
+                    size={30}
+                    color={isDark ? '#000' : '#fff'}
+                    css={{ mt: 0 }}
+                  >
+                    {dataWheather.current.condition.text}
+                  </Text>
+                  <Text
+                    h6
+                    size={33}
+                    color={isDark ? '#000' : '#fff'}
+                    css={{ mt: 0 }}
+                  >
+                    {dataWheather.current.temp_c} °C
+                    {' / '}
+                    {dataWheather.current.temp_f} °F
+                  </Text>
+                </Col>
+              )}
             </div>
           </Grid>
+
+          <Grid
+            sm={10}
+            md={12}
+            xs={10}
+            lg={6}
+            style={{ justifyContent: 'center' }}
+          >
+            <Row
+              style={{
+                justifyContent: 'space-between',
+              }}
+            >
+              <Col style={{ width: '48%' }}>
+                <div
+                  style={{
+                    backgroundColor: isDark
+                      ? theme.colors.white.value
+                      : theme.colors.blue600.value,
+                    borderRadius: 20,
+                    padding: 10,
+                    minHeight: 92,
+                    width: '100%',
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text>1</Text>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: isDark
+                      ? theme.colors.white.value
+                      : theme.colors.blue600.value,
+                    borderRadius: 20,
+                    padding: 10,
+                    minHeight: 92,
+                    width: '100%',
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text>1</Text>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: isDark
+                      ? theme.colors.white.value
+                      : theme.colors.blue600.value,
+                    borderRadius: 20,
+                    padding: 10,
+                    minHeight: 92,
+                    width: '100%',
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text>1</Text>
+                </div>
+              </Col>
+              <Col style={{ width: '48%' }}>
+                <div
+                  style={{
+                    backgroundColor: isDark
+                      ? theme.colors.white.value
+                      : theme.colors.blue600.value,
+                    borderRadius: 20,
+                    padding: 10,
+
+                    minHeight: 92,
+                    width: '100%',
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text>1</Text>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: isDark
+                      ? theme.colors.white.value
+                      : theme.colors.blue600.value,
+                    borderRadius: 20,
+                    padding: 10,
+                    minHeight: 92,
+                    width: '100%',
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text>1</Text>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: isDark
+                      ? theme.colors.white.value
+                      : theme.colors.blue600.value,
+                    borderRadius: 20,
+                    padding: 10,
+                    minHeight: 92,
+                    width: '100%',
+                    marginBottom: 10,
+                  }}
+                >
+                  <Text>1</Text>
+                </div>
+              </Col>
+            </Row>
+          </Grid>
         </Grid.Container>
 
-        <Grid.Container
+        {/* <Grid.Container
           gap={1}
           justify="center"
           style={{ maxWidth: 800 }}
@@ -348,7 +465,7 @@ const ContentPage = (props) => {
               <Text>1</Text>
             </Col>
           </Grid>
-        </Grid.Container>
+        </Grid.Container> */}
       </div>
     </>
   );
