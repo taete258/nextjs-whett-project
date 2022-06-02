@@ -8,7 +8,6 @@ import ContentPage from './contentPage';
 export default function Home() {
   const { setTheme } = useNextTheme();
   const { isDark, type, theme } = useTheme();
-
   return (
     <>
       <Head>

@@ -15,7 +15,7 @@ import { useTheme as useNextTheme } from 'next-themes';
 
 const getWeather = async (params) => {
   const options = {
-    url: `https://api.weatherapi.com/v1/current.json?key=b8f2fcfa73144c96a35123148222105&q=${params}&aqi=yes`,
+    url: `https://api.weatherapi.com/v1/current.json?key=${process.env.API_KEY}&q=${params}&aqi=yes`,
   };
 
   const response = await axios
@@ -33,7 +33,7 @@ const getWeather = async (params) => {
 
 const search = async (params) => {
   const options = {
-    url: `https://api.weatherapi.com/v1/search.json?key=b8f2fcfa73144c96a35123148222105&q=${params}`,
+    url: `https://api.weatherapi.com/v1/search.json?key=${process.env.API_KEY}&q=${params}`,
   };
 
   const response = await axios
@@ -331,141 +331,6 @@ const ContentPage = (props) => {
             </Row>
           </Grid>
         </Grid.Container>
-
-        {/* <Grid.Container
-          gap={1}
-          justify="center"
-          style={{ maxWidth: 800 }}
-        >
-          <Grid
-            sm={10}
-            md={12}
-            xs={10}
-            style={{ justifyContent: 'space-between' }}
-          >
-            <Col
-              justify="center"
-              align="center"
-              style={{
-                backgroundColor: isDark
-                  ? theme.colors.white.value
-                  : theme.colors.blue600.value,
-                borderRadius: 20,
-                padding: 10,
-
-                minHeight: 100,
-                width: '48%',
-              }}
-            >
-              <Text>1</Text>
-            </Col>
-            <Col
-              justify="center"
-              align="center"
-              style={{
-                backgroundColor: isDark
-                  ? theme.colors.white.value
-                  : theme.colors.blue600.value,
-                borderRadius: 20,
-                padding: 10,
-                minHeight: 100,
-                width: '48%',
-              }}
-            >
-              <Text>1</Text>
-            </Col>
-          </Grid>
-        </Grid.Container>
-
-        <Grid.Container
-          gap={1}
-          justify="center"
-          style={{ maxWidth: 800 }}
-        >
-          <Grid
-            sm={10}
-            md={12}
-            xs={10}
-            style={{ justifyContent: 'space-between' }}
-          >
-            <Col
-              justify="center"
-              align="center"
-              style={{
-                backgroundColor: isDark
-                  ? theme.colors.white.value
-                  : theme.colors.blue600.value,
-                borderRadius: 20,
-                padding: 10,
-
-                minHeight: 100,
-                width: '48%',
-              }}
-            >
-              <Text>1</Text>
-            </Col>
-            <Col
-              justify="center"
-              align="center"
-              style={{
-                backgroundColor: isDark
-                  ? theme.colors.white.value
-                  : theme.colors.blue600.value,
-                borderRadius: 20,
-                padding: 10,
-                minHeight: 100,
-                width: '48%',
-              }}
-            >
-              <Text>1</Text>
-            </Col>
-          </Grid>
-        </Grid.Container>
-
-        <Grid.Container
-          gap={1}
-          justify="center"
-          style={{ maxWidth: 800 }}
-        >
-          <Grid
-            sm={10}
-            md={12}
-            xs={10}
-            style={{ justifyContent: 'space-between' }}
-          >
-            <Col
-              justify="center"
-              align="center"
-              style={{
-                backgroundColor: isDark
-                  ? theme.colors.white.value
-                  : theme.colors.blue600.value,
-                borderRadius: 20,
-                padding: 10,
-
-                minHeight: 100,
-                width: '48%',
-              }}
-            >
-              <Text>1</Text>
-            </Col>
-            <Col
-              justify="center"
-              align="center"
-              style={{
-                backgroundColor: isDark
-                  ? theme.colors.white.value
-                  : theme.colors.blue600.value,
-                borderRadius: 20,
-                padding: 10,
-                minHeight: 100,
-                width: '48%',
-              }}
-            >
-              <Text>1</Text>
-            </Col>
-          </Grid>
-        </Grid.Container> */}
       </div>
     </>
   );
