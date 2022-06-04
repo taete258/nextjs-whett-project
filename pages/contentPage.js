@@ -63,6 +63,23 @@ const ContentPage = (props) => {
 
   const [selectLocation, setSelectLocation] = useState('');
 
+  const styleObj = {
+    miniCard: {
+      backgroundColor: isDark
+        ? theme.colors.white.value
+        : theme.colors.blue600.value,
+      borderRadius: 20,
+      padding: 10,
+      minHeight: 155,
+      width: '100%',
+      marginBottom: 10,
+      title: {
+        fontSize: 22,
+        color: '#fff',
+      },
+    },
+  };
+
   const onLoad = async () => {
     const hours = new Date().getHours();
     const isDayTime = hours > 6 && hours < 20;
@@ -114,6 +131,14 @@ const ContentPage = (props) => {
     );
   };
 
+  const uvIndex = (item) => {
+    if (item >= 0 && item <= 2.9) return 'Low';
+    if (item >= 3 && item <= 5.9) return 'Moderate ';
+    if (item >= 6 && item <= 7.9) return 'High  ';
+    if (item >= 8 && item <= 10.9) return 'Very High ';
+    if (item <= 11) return 'Extreme   ';
+  };
+
   useEffect(() => {
     onLoad();
   }, []);
@@ -152,9 +177,15 @@ const ContentPage = (props) => {
                   Whett
                 </span>
               </h1>
-              <div style={{ width: '100%', marginTop: 10 }}>
+              <div
+                style={{
+                  width: '100%',
+                  marginTop: 10,
+                  marginBottom: 10,
+                }}
+              >
                 <ReactSearchAutocomplete
-                  styling={{ width: 800, zIndex: 1 }}
+                  styling={{ width: '100%', zIndex: 1 }}
                   items={listLocation}
                   onSearch={handleOnSearch}
                   onHover={handleOnHover}
@@ -165,13 +196,7 @@ const ContentPage = (props) => {
               </div>
             </Col>
           </Grid>
-        </Grid.Container>
 
-        <Grid.Container
-          gap={1}
-          justify="center"
-          style={{ width: 'auto' }}
-        >
           <Grid sm={10} md={12} xs={10} lg={6}>
             <div
               style={{
@@ -227,109 +252,110 @@ const ContentPage = (props) => {
             </div>
           </Grid>
 
-          <Grid
-            sm={10}
-            md={12}
-            xs={10}
-            lg={6}
-            style={{ justifyContent: 'center' }}
-          >
-            <Row
-              style={{
-                justifyContent: 'space-between',
-              }}
+          {selectLocation && (
+            <Grid
+              sm={10}
+              md={12}
+              xs={10}
+              lg={6}
+              style={{ justifyContent: 'center' }}
             >
-              <Col style={{ width: '48%' }}>
-                <div
-                  style={{
-                    backgroundColor: isDark
-                      ? theme.colors.white.value
-                      : theme.colors.blue600.value,
-                    borderRadius: 20,
-                    padding: 10,
-                    minHeight: 92,
-                    width: '100%',
-                    marginBottom: 10,
-                  }}
-                >
-                  <Text>1</Text>
-                </div>
-                <div
-                  style={{
-                    backgroundColor: isDark
-                      ? theme.colors.white.value
-                      : theme.colors.blue600.value,
-                    borderRadius: 20,
-                    padding: 10,
-                    minHeight: 92,
-                    width: '100%',
-                    marginBottom: 10,
-                  }}
-                >
-                  <Text>1</Text>
-                </div>
-                <div
-                  style={{
-                    backgroundColor: isDark
-                      ? theme.colors.white.value
-                      : theme.colors.blue600.value,
-                    borderRadius: 20,
-                    padding: 10,
-                    minHeight: 92,
-                    width: '100%',
-                    marginBottom: 10,
-                  }}
-                >
-                  <Text>1</Text>
-                </div>
-              </Col>
-              <Col style={{ width: '48%' }}>
-                <div
-                  style={{
-                    backgroundColor: isDark
-                      ? theme.colors.white.value
-                      : theme.colors.blue600.value,
-                    borderRadius: 20,
-                    padding: 10,
-
-                    minHeight: 92,
-                    width: '100%',
-                    marginBottom: 10,
-                  }}
-                >
-                  <Text>1</Text>
-                </div>
-                <div
-                  style={{
-                    backgroundColor: isDark
-                      ? theme.colors.white.value
-                      : theme.colors.blue600.value,
-                    borderRadius: 20,
-                    padding: 10,
-                    minHeight: 92,
-                    width: '100%',
-                    marginBottom: 10,
-                  }}
-                >
-                  <Text>1</Text>
-                </div>
-                <div
-                  style={{
-                    backgroundColor: isDark
-                      ? theme.colors.white.value
-                      : theme.colors.blue600.value,
-                    borderRadius: 20,
-                    padding: 10,
-                    minHeight: 92,
-                    width: '100%',
-                    marginBottom: 10,
-                  }}
-                >
-                  <Text>1</Text>
-                </div>
-              </Col>
-            </Row>
-          </Grid>
+              <Row
+                style={{
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Col style={{ width: '48%' }}>
+                  <div style={styleObj.miniCard}>
+                    <Text style={styleObj.miniCard.title}>
+                      <i className="bx bx-sun" /> UV
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 26,
+                        color: '#fff',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {dataWheather.current.uv}
+                      <Text style={{ fontSize: 20, color: '#fff' }}>
+                        {uvIndex(dataWheather.current.uv)}
+                      </Text>
+                    </Text>
+                  </div>
+                  <div style={styleObj.miniCard}>
+                    <Text style={styleObj.miniCard.title}>
+                      <i className="bx bx-wind" /> wind
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 26,
+                        color: '#fff',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {dataWheather.current.wind_kph}
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          color: '#fff',
+                        }}
+                      >
+                        Km/h
+                      </Text>
+                    </Text>
+                  </div>
+                </Col>
+                <Col style={{ width: '48%' }}>
+                  <div style={styleObj.miniCard}>
+                    <Text style={styleObj.miniCard.title}>
+                      <i className="bx bx-tachometer" /> Pressure
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 26,
+                        color: '#fff',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {dataWheather.current.pressure_mb}
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          color: '#fff',
+                        }}
+                      >
+                        hPa
+                      </Text>
+                    </Text>
+                  </div>
+                  <div style={styleObj.miniCard}>
+                    <Text style={styleObj.miniCard.title}>
+                      <i className="bx bxs-thermometer" />
+                      Feel Like
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 26,
+                        color: '#fff',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {dataWheather.current.temp_c} °C
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          color: '#fff',
+                        }}
+                      >
+                        {dataWheather.current.temp_f} °F
+                      </Text>
+                    </Text>
+                  </div>
+                </Col>
+              </Row>
+            </Grid>
+          )}
         </Grid.Container>
       </div>
     </>

@@ -80,6 +80,7 @@ export default function Home() {
               ? theme.colors.black.value
               : theme.colors.white.value,
             overflow: 'auto',
+            padding: 5,
           }}
         >
           <ContentPage props={'yyyssss'} test={'aaaa'} />
