@@ -76,7 +76,9 @@ const ContentPage = (props) => {
       marginBottom: 10,
       title: {
         fontSize: 22,
-        color: '#fff',
+        color: isDark
+          ? theme.colors.black.value
+          : theme.colors.white.value,
       },
     },
   };
@@ -288,13 +290,20 @@ const ContentPage = (props) => {
                         <Text
                           style={{
                             fontSize: 26,
-                            color: '#fff',
+                            color: isDark
+                              ? theme.colors.black.value
+                              : theme.colors.white.value,
                             textAlign: 'center',
                           }}
                         >
                           {dataWheather.current.uv}
                           <Text
-                            style={{ fontSize: 20, color: '#fff' }}
+                            style={{
+                              fontSize: 20,
+                              color: isDark
+                                ? theme.colors.black.value
+                                : theme.colors.white.value,
+                            }}
                           >
                             {uvIndex(dataWheather.current.uv)}
                           </Text>
@@ -307,7 +316,9 @@ const ContentPage = (props) => {
                         <Text
                           style={{
                             fontSize: 26,
-                            color: '#fff',
+                            color: isDark
+                              ? theme.colors.black.value
+                              : theme.colors.white.value,
                             textAlign: 'center',
                           }}
                         >
@@ -315,7 +326,9 @@ const ContentPage = (props) => {
                           <Text
                             style={{
                               fontSize: 20,
-                              color: '#fff',
+                              color: isDark
+                                ? theme.colors.black.value
+                                : theme.colors.white.value,
                             }}
                           >
                             Km/h
@@ -331,7 +344,9 @@ const ContentPage = (props) => {
                         <Text
                           style={{
                             fontSize: 26,
-                            color: '#fff',
+                            color: isDark
+                              ? theme.colors.black.value
+                              : theme.colors.white.value,
                             textAlign: 'center',
                           }}
                         >
@@ -339,7 +354,9 @@ const ContentPage = (props) => {
                           <Text
                             style={{
                               fontSize: 20,
-                              color: '#fff',
+                              color: isDark
+                                ? theme.colors.black.value
+                                : theme.colors.white.value,
                             }}
                           >
                             hPa
